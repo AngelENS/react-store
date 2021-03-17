@@ -1,12 +1,13 @@
 import store from './redux/store';
-import { bugAdded, bugRemoved, bugResolved } from './redux/actions';
+import * as actions from './redux/actions';
 
-const unsubscribe = store.subscribe(() => {
-    console.log("Store changed!", store.getState())
+store.subscribe(() => {
+    console.log("Store Change!");
 })
 
-store.dispatch(bugAdded("Bug1"));
-store.dispatch(bugResolved(1));
-unsubscribe();
-store.dispatch(bugRemoved(1));
+//store.dispatch(actions.bugAdded("BUG1"));
+//store.dispatch(actions.bugAdded("BUG2"));
+//store.dispatch(actions.bugAdded("BUG3"));
+//store.dispatch(actions.bugResolved(1));
+
 console.log(store.getState());
