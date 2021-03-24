@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createSelector } from 'reselect';
+import axios from 'axios';
 import { apiCallBegan } from './api';
 import moment from 'moment';
 
@@ -38,7 +39,7 @@ const slice = createSlice({
     }
 });
 
-const { bugAdded, bugResolved, bugAssignedToUser, bugsReceived, bugsRequested, bugsRequestFailed } = slice.actions;
+export const { bugAdded, bugResolved, bugAssignedToUser, bugsReceived, bugsRequested, bugsRequestFailed } = slice.actions;
 export default slice.reducer;
 
 //ACTION CREATORS (COMANDS)
@@ -48,7 +49,7 @@ export const loadBugs = () => (dispatch, getState) => {
     const { lastFetch } = getState().entities.bugs;
     const diffInMinutes = moment().diff(moment(lastFetch), 'minutes');
     if (diffInMinutes < 10) return; //YOU SHOULD HAVE A TIME SERVER RESPONSE CONSTANT IN THE PROYECT CONFIG
-    dispatch(apiCallBegan({
+    return dispatch(apiCallBegan({
         url,
         onStart: bugsRequested.type,
         onSuccess: bugsReceived.type,
@@ -81,7 +82,7 @@ export const assignBugToUser = (bugId, userId) => apiCallBegan({
 export const getUnresolvedBugs = createSelector(
     state => state.entities.bugs,
     state => state.entities.projects,
-    (bugs, projects) => bugs.filter(bug => !bug.resolved)
+    (bugs, projects) => bugs.list.filter(bug => !bug.resolved)
 );
 
 export const getBugsByUser = userId => createSelector(
